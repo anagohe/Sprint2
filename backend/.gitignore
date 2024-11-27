@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+../frontend/node_modules/
+
+# Test coverage and results
+coverage/
+*.lcov
+../test-report.html
+
+# Build outputs
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# Ignore lock files if not versioning them
+package-lock.json
+yarn.lock
+
+# Ignore specific test outputs
+*.test.js.snap
+jest-config.json
+
+# Ignore compiled or transpiled code
+*.tsbuildinfo
