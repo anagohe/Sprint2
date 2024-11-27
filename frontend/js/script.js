@@ -1,15 +1,16 @@
-const baseURL = 'http://localhost:3000/api/books';
-const reviewsURL = 'http://localhost:3000/api/reviews';
+const baseURL = 'http://localhost:3001/api/books';
+const reviewsURL = 'http://localhost:3001/api/reviews';
 
 // Función genérica para manejar errores de fetch
 const handleFetchError = (error, message) => {
-    console.error(`${message}`, error);
-    alert(`Error: ${message}. Detalles: ${error.message || 'Desconocido'}`);
+    console.error(message, error);
+    alert('Ocurrió un error, intenta nuevamente.');
 };
 
 // Validar campos vacíos y resaltar errores
 function validateForm(fieldIds) {
     let isValid = true;
+
     fieldIds.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (!field.value.trim()) {
@@ -19,8 +20,10 @@ function validateForm(fieldIds) {
             field.classList.remove('is-invalid');
         }
     });
+
     return isValid;
 }
+
 
 // Limpiar un formulario
 function clearForm(fields) {
@@ -35,50 +38,53 @@ function clearForm(fields) {
 // FUNCIONES PARA LIBROS
 // =====================
 
-// Obtener libros
-async function getBooks() {
-    try {
-        const response = await fetch(baseURL);
-        if (!response.ok) throw new Error('Error al obtener los libros');
-        const books = await response.json();
-        renderBooks(books);
-        loadBookTitles(books);
-    } catch (error) {
-        handleFetchError(error, 'Error al obtener libros');
-    }
-}
-
 // Renderizar libros en la tabla
 function renderBooks(books) {
     const bookList = document.getElementById('bookList');
-    bookList.innerHTML = books.map(book => `
-        <tr>
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td>${book.genre}</td>
-            <td>${new Date(book.read_date).toLocaleDateString()}</td>
-            <td>
-                <button class="btn btn-warning" onclick="editBook(${book.book_id})">Editar</button>
-                <button class="btn btn-danger" onclick="deleteBook(${book.book_id})">Eliminar</button>
-            </td>
-        </tr>
-    `).join('');
+    bookList.innerHTML = books.length
+        ? books.map(book => `
+            <tr>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.genre}</td>
+                <td>${book.read_date ? new Date(book.read_date).toLocaleDateString() : ''}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editBook(${book.book_id})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.book_id})">Eliminar</button>
+                </td>
+                <td>
+                    <button class="btn btn-secondary btn-sm" onclick="archiveBook(${book.book_id})">Archivar</button>
+                </td>
+            </tr>
+        `).join('')
+        : '<tr><td colspan="6" class="text-center">No hay libros disponibles</td></tr>';
 }
 
-// Agregar un nuevo libro
+// Obtener libros
+async function getBooks(filter = {}) {
+    try {
+        const params = new URLSearchParams(filter).toString();
+        const url = params ? `${baseURL}?${params}` : baseURL;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        renderBooks(data);
+    } catch (error) {
+        handleFetchError(error, 'Error al obtener libros:');
+    }
+}
+
+// Guardar un nuevo libro
 async function saveBook() {
     const fieldIds = ['title', 'author', 'genre', 'read_date'];
     if (!validateForm(fieldIds)) {
-        alert('Por favor completa todos los campos.');
+        alert('Todos los campos son obligatorios. Por favor, completa el formulario.');
         return;
     }
 
-    const bookData = {
-        title: document.getElementById('title').value.trim(),
-        author: document.getElementById('author').value.trim(),
-        genre: document.getElementById('genre').value.trim(),
-        read_date: document.getElementById('read_date').value.trim(),
-    };
+    const bookData = Object.fromEntries(
+        fieldIds.map(id => [id, document.getElementById(id).value.trim()])
+    );
 
     try {
         const response = await fetch(baseURL, {
@@ -87,13 +93,12 @@ async function saveBook() {
             body: JSON.stringify(bookData),
         });
 
-        if (!response.ok) throw new Error('Error al guardar el libro');
         const result = await response.json();
-        alert(result.message || 'Libro agregado exitosamente.');
+        alert(result.message);
         getBooks();
         clearForm(fieldIds);
     } catch (error) {
-        handleFetchError(error, 'Error al guardar el libro');
+        handleFetchError(error, 'Error al guardar el libro:');
     }
 }
 
@@ -101,39 +106,32 @@ async function saveBook() {
 async function editBook(bookId) {
     try {
         const response = await fetch(`${baseURL}/${bookId}`);
-        if (!response.ok) throw new Error('No se pudo obtener la información del libro');
-
         const book = await response.json();
-        const formattedDate = book.read_date ? new Date(book.read_date).toISOString().split('T')[0] : '';
 
-        document.getElementById('book_id').value = book.book_id;
-        document.getElementById('title').value = book.title;
-        document.getElementById('author').value = book.author;
-        document.getElementById('genre').value = book.genre;
-        document.getElementById('read_date').value = formattedDate;
+        ['book_id', 'title', 'author', 'genre', 'read_date'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            field.value = book[fieldId] || (fieldId === 'read_date' ? book.read_date.split('T')[0] : '');
+        });
 
         document.getElementById('saveBookBtn').style.display = 'none';
         document.getElementById('updateBookBtn').style.display = 'inline-block';
     } catch (error) {
-        handleFetchError(error, 'Error al cargar el libro');
+        handleFetchError(error, 'Error al cargar el libro:');
     }
 }
 
-// Guardar cambios en un libro editado
+// Actualizar libro
 async function updateBook() {
     const fieldIds = ['book_id', 'title', 'author', 'genre', 'read_date'];
     if (!validateForm(fieldIds.slice(1))) {
-        alert('Por favor completa todos los campos.');
+        alert('Todos los campos son obligatorios. Por favor, completa el formulario.');
         return;
     }
 
     const bookId = document.getElementById('book_id').value;
-    const bookData = {
-        title: document.getElementById('title').value.trim(),
-        author: document.getElementById('author').value.trim(),
-        genre: document.getElementById('genre').value.trim(),
-        read_date: document.getElementById('read_date').value.trim(),
-    };
+    const bookData = Object.fromEntries(
+        fieldIds.slice(1).map(id => [id, document.getElementById(id).value.trim()])
+    );
 
     try {
         const response = await fetch(`${baseURL}/${bookId}`, {
@@ -142,16 +140,14 @@ async function updateBook() {
             body: JSON.stringify(bookData),
         });
 
-        if (!response.ok) throw new Error('Error al actualizar el libro');
         const result = await response.json();
-        alert(result.message || 'Libro actualizado exitosamente.');
+        alert(result.message);
         getBooks();
         clearForm(fieldIds);
-
         document.getElementById('saveBookBtn').style.display = 'inline-block';
         document.getElementById('updateBookBtn').style.display = 'none';
     } catch (error) {
-        handleFetchError(error, 'Error al actualizar el libro');
+        handleFetchError(error, 'Error al actualizar el libro:');
     }
 }
 
@@ -161,70 +157,73 @@ async function deleteBook(bookId) {
 
     try {
         const response = await fetch(`${baseURL}/${bookId}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Error al eliminar el libro');
         const result = await response.json();
-        alert(result.message || 'Libro eliminado exitosamente.');
+        alert(result.message);
         getBooks();
     } catch (error) {
-        handleFetchError(error, 'Error al eliminar el libro');
+        handleFetchError(error, 'Error al eliminar el libro:');
     }
 }
 
-// =====================
-// FUNCIONES PARA RESEÑAS
-// =====================
-
-function loadBookTitles(books) {
-    const bookSelect = document.getElementById('reviewBookTitle');
-    bookSelect.innerHTML = '<option value="" selected disabled>Seleccione un libro</option>';
-    books.forEach(book => {
-        const option = document.createElement('option');
-        option.value = book.book_id;
-        option.textContent = book.title;
-        bookSelect.appendChild(option);
-    });
+// Archivar libro
+async function archiveBook(bookId) {
+    try {
+        const response = await fetch(`${baseURL}/${bookId}/archive`, { method: 'PUT' });
+        const result = await response.json();
+        alert(result.message);
+        getBooks();
+    } catch (error) {
+        handleFetchError(error, 'Error al archivar el libro:');
+    }
 }
 
+// =======================
+// FUNCIONES PARA RESEÑAS
+// =======================
+
+// Renderizar reseñas en la tabla
+function renderReviews(reviews) {
+    const reviewList = document.getElementById('reviewList');
+    reviewList.innerHTML = reviews.length
+        ? reviews.map(review => `
+            <tr>
+                <td>${review.review_id}</td>
+                <td>${review.book_id}</td>
+                <td>${review.user_id}</td>
+                <td>${review.rating}</td>
+                <td>${review.review_text}</td>
+                <td>${new Date(review.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editReview(${review.review_id})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteReview(${review.review_id})">Eliminar</button>
+                </td>
+            </tr>
+        `).join('')
+        : '<tr><td colspan="7" class="text-center">No hay reseñas disponibles</td></tr>';
+}
+
+// Obtener todas las reseñas
 async function getReviews() {
     try {
         const response = await fetch(reviewsURL);
-        if (!response.ok) throw new Error('Error al obtener las reseñas');
         const reviews = await response.json();
         renderReviews(reviews);
     } catch (error) {
-        handleFetchError(error, 'Error al obtener reseñas');
+        handleFetchError(error, 'Error al obtener reseñas:');
     }
 }
 
-function renderReviews(reviews) {
-    const reviewList = document.getElementById('reviewList');
-    reviewList.innerHTML = reviews.map(review => `
-        <tr>
-            <td>${review.book_title || 'Título no disponible'}</td>
-            <td>${review.rating}</td>
-            <td>${review.review_text}</td>
-            <td>${new Date(review.created_at).toLocaleDateString()}</td>
-            <td>
-                <button class="btn btn-warning">Editar</button>
-                <button class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
+// Crear una nueva reseña
 async function addReview() {
-    const fields = ['reviewBookTitle', 'reviewRating', 'reviewText'];
-
-    if (!validateForm(fields)) {
-        alert('Por favor completa todos los campos.');
+    const fieldIds = ['reviewBookId', 'reviewUserId', 'reviewRating', 'reviewText'];
+    if (!validateForm(fieldIds)) {
+        alert('Todos los campos son obligatorios.');
         return;
     }
 
-    const reviewData = {
-        book_id: document.getElementById('reviewBookTitle').value,
-        rating: parseInt(document.getElementById('reviewRating').value.trim(), 10),
-        review_text: document.getElementById('reviewText').value.trim(),
-    };
+    const reviewData = Object.fromEntries(
+        fieldIds.map(id => [id.replace('review', '').toLowerCase(), document.getElementById(id).value.trim()])
+    );
 
     try {
         const response = await fetch(reviewsURL, {
@@ -233,26 +232,19 @@ async function addReview() {
             body: JSON.stringify(reviewData),
         });
 
-        if (!response.ok) throw new Error('Error al agregar la reseña');
         const result = await response.json();
         alert(result.message || 'Reseña agregada exitosamente.');
         getReviews();
-        clearForm(fields);
+        clearForm(fieldIds);
     } catch (error) {
-        handleFetchError(error, 'Error al agregar la reseña');
+        handleFetchError(error, 'Error al agregar reseña:');
     }
 }
 
-// Inicializar al cargar la página
+// Inicializar eventos
 document.addEventListener('DOMContentLoaded', () => {
     getBooks();
     getReviews();
     document.getElementById('saveBookBtn').addEventListener('click', saveBook);
     document.getElementById('updateBookBtn').addEventListener('click', updateBook);
 });
-
-// Exponer funciones globalmente
-window.editBook = editBook;
-window.updateBook = updateBook;
-window.deleteBook = deleteBook;
-window.addReview = addReview;

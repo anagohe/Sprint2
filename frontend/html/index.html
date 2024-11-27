@@ -1,90 +1,117 @@
-
-
-
 <!DOCTYPE html>
 
-
-
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Biblioteca de Libros</title>
-    <!-- Cargar Bootstrap -->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
-    <!-- Cargar tu archivo de estilos personalizados -->
-    <link rel="stylesheet" href="../css/styles.css"> <!-- Aquí es donde se coloca la ruta relativa al CSS -->
+
+    <style>
+        .is-invalid {
+            border-color: red;
+        }
+    </style>
+
 </head>
+
 <body>
+
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Biblioteca de Libros</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="quotes.html">Publicar Citas</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
-        <!-- Título principal -->
-        <h2 class="text-center text-primary mb-4">-Biblioteca de Libros-</h2>
+        <h2 class="text-center">Biblioteca de Libros</h2>
 
-        <!-- Formulario de Libros -->
-        <section>
-            <h3 class="text-center">Agregar Libro</h3>
-            <form id="bookForm">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="title">Título</label>
-                        <input type="text" class="form-control" id="title" placeholder="Ingrese el título del libro" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="author">Autor</label>
-                        <input type="text" class="form-control" id="author" placeholder="Ingrese el autor del libro" required>
-                    </div>
+        <!-- Formulario para agregar/editar libros -->
+        <form id="bookForm">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="title">Título</label>
+                    <input type="text" class="form-control" id="title" placeholder="Ingrese el título del libro" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="genre">Género</label>
-                        <input type="text" class="form-control" id="genre" placeholder="Ingrese el género del libro" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="read_date">Fecha de Lectura</label>
-                        <input type="date" class="form-control" id="read_date" required>
-                    </div>
+                <div class="form-group col-md-6">
+                    <label for="author">Autor</label>
+                    <input type="text" class="form-control" id="author" placeholder="Ingrese el autor del libro" required>
                 </div>
-                <input type="hidden" id="book_id">
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary btn-custom" id="saveBookBtn">Guardar Libro</button>
-                    <button type="button" class="btn btn-success btn-custom" id="updateBookBtn" style="display: none;">Guardar Cambios</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm(['book_id', 'title', 'author', 'genre', 'read_date'])">Limpiar</button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Lista de Libros -->
-        <section>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Lista de Libros</h3>
-                <button class="btn btn-info" onclick="getBooks()">Actualizar</button>
             </div>
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Género</th>
-                        <th>Fecha de Lectura</th>
-                        <th>Acciones</th>
-                        <th>Archivar</th>
-                    </tr>
-                </thead>
-                <tbody id="bookList"></tbody>
-            </table>
-        </section>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="genre">Género</label>
+                    <input type="text" class="form-control" id="genre" placeholder="Ingrese el género del libro" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="read_date">Fecha de Lectura</label>
+                    <input type="date" class="form-control" id="read_date" required>
+                </div>
+            </div>
+            <input type="hidden" id="book_id">
+            <button type="button" class="btn btn-primary" id="saveBookBtn">Guardar Libro</button>
+            <button type="button" class="btn btn-success" id="updateBookBtn" style="display: none;">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" onclick="clearForm(['book_id', 'title', 'author', 'genre', 'read_date'])">Limpiar</button>
+        </form>
 
-        <!-- Formulario y Lista de Reseñas -->
-        <section>
-            <h3 class="text-center">Reseñas</h3>
-            <form id="reviewForm" class="mb-4">
+        <!-- Filtros para libros -->
+        <div class="mt-4">
+            <h3>Filtrar Libros</h3>
+            <form id="filterBooksForm" class="form-inline" onsubmit="event.preventDefault(); filterBooks();">
+                <input type="text" class="form-control mr-2" id="filterAuthor" placeholder="Filtrar por autor">
+                <input type="text" class="form-control mr-2" id="filterGenre" placeholder="Filtrar por género">
+                <input type="text" class="form-control mr-2" id="filterYear" placeholder="Filtrar por año">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+        </div>
+
+        <!-- Lista de libros -->
+        <div class="d-flex justify-content-between align-items-center mt-5">
+            <h3>Lista de Libros</h3>
+            <button class="btn btn-info" onclick="getBooks()">Actualizar</button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Género</th>
+                    <th>Fecha de Lectura</th>
+                    <th>Acciones</th>
+                    <th>Archivar</th>
+                </tr>
+            </thead>
+            <tbody id="bookList"></tbody>
+        </table>
+
+        <!-- Apartado de reseñas -->
+        <div class="container mt-5">
+            <h2 class="text-center">Reseñas</h2>
+
+            <!-- Formulario para agregar/editar reseñas -->
+            <form id="reviewForm" class="mb-4" onsubmit="event.preventDefault();">
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="reviewBookTitle">Título del Libro</label>
-                        <select class="form-control" id="reviewBookTitle" required>
-                            <option value="" selected disabled>Seleccione un libro</option>
-                        </select>
+                    <div class="form-group col-md-3">
+                        <label for="reviewBookId">ID Libro</label>
+                        <input type="text" class="form-control" id="reviewBookId" placeholder="ID del libro" required>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="reviewUserId">ID Usuario</label>
+                        <input type="text" class="form-control" id="reviewUserId" placeholder="ID del usuario" required>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="reviewRating">Calificación</label>
@@ -95,19 +122,24 @@
                         <input type="text" class="form-control" id="reviewText" placeholder="Escribe tu reseña" required>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary btn-custom" id="saveReviewBtn" onclick="addReview()">Agregar Reseña</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm(['reviewBookTitle', 'reviewRating', 'reviewText'])">Limpiar</button>
-                </div>
+                <input type="hidden" id="reviewId">
+                <button type="button" class="btn btn-primary" id="saveReviewBtn" onclick="addReview()">Agregar Reseña</button>
+                <button type="button" class="btn btn-success" id="updateReviewBtn" style="display: none;" onclick="updateReview()">Actualizar Reseña</button>
+                <button type="button" class="btn btn-secondary" onclick="clearReviewForm()">Limpiar</button>
             </form>
-            <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <!-- Lista de reseñas -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
                 <h3>Lista de Reseñas</h3>
                 <button class="btn btn-info" onclick="getReviews()">Actualizar</button>
             </div>
-            <table class="table table-striped table-bordered">
+
+            <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Libro</th>
+                        <th>Usuario</th>
                         <th>Calificación</th>
                         <th>Reseña</th>
                         <th>Fecha</th>
@@ -116,11 +148,14 @@
                 </thead>
                 <tbody id="reviewList"></tbody>
             </table>
-        </section>
+        </div>
     </div>
-    
-  
-    <!-- Scripts -->
+
+    <!-- Importar el archivo JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/script.js"></script>
+
 </body>
+
 </html>

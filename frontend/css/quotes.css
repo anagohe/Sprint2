@@ -1,0 +1,90 @@
+body {
+    background-color: #f9f3f5;
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+    background-color: #d5006d;
+}
+
+.navbar-brand,
+.nav-link {
+    color: #ffffff !important;
+}
+
+.container {
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 30px;
+}
+
+h2,
+h3 {
+    color: #d5006d;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #d5006d;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #d5006d;
+    box-shadow: 0 0 5px rgba(213, 0, 109, 0.5);
+}
+
+.btn-primary {
+    background-color: #ec407a;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #d5006d;
+}
+
+.btn-secondary {
+    border-radius: 5px;
+    border: 1px solid #ec407a;
+    color: #ec407a;
+}
+
+.btn-secondary:hover {
+    background-color: #f1b2d3;
+}
+
+table {
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th {
+    background-color: #d5006d;
+    color: white;
+}
+
+th,
+td {
+    padding: 15px;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background-color: #f9c1d9;
+}
+
+/* Estilos del modal */
+.modal-content {
+    background-color: #fce4ec;
+}
+
+.modal-header {
+    background-color: #f48fb1;
+}
+
+.modal-title {
+    color: #ffffff;
+}
