@@ -1,0 +1,38 @@
+CREATE DATABASE biblioteca_filosófica;
+USE biblioteca_filosófica;
+CREATE TABLE libros (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    genero VARCHAR(100) NOT NULL,
+    autor VARCHAR(100) NOT NULL,
+    fecha_leida DATE NOT NULL,
+    calificacion INT CHECK (calificacion >= 1 AND calificacion <= 5),
+    reseña TEXT,
+    privado BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE citas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cita TEXT NOT NULL,
+    libro_id INT,
+    autor VARCHAR(100) NOT NULL,
+    privado BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (libro_id) REFERENCES libros(id) ON DELETE SET NULL
+);
+INSERT INTO libros (titulo, genero, autor, fecha_leida, calificacion, reseña, privado)
+VALUES ('El nombre de la rosa', 'Ficción', 'Umberto Eco', '2024-01-01', 5, 'Una obra maestra de la narrativa.', TRUE);
+UPDATE libros
+SET calificacion = 4, reseña = 'Una gran historia, pero un poco larga.'
+WHERE id = 1;  -- Cambia 1 por el ID del libro que desees editar
+DELETE FROM libros
+WHERE id = 1;  -- Cambia 1 por el ID del libro que desees eliminar
+SELECT * FROM libros WHERE privado = FALSE;  -- Para obtener los libros públicos
+INSERT INTO citas (cita, libro_id, autor, privado)
+VALUES ('La vida es sueño.', 1, 'Pedro Calderón de la Barca', TRUE);  -- Cambia 1 por el ID del libro relacionado
+UPDATE citas
+SET cita = 'Cita actualizada', privado = FALSE
+WHERE id = 1;  -- Cambia 1 por el ID de la cita que desees editar
+DELETE FROM citas
+WHERE id = 1;  -- Cambia 1 por el ID de la cita que desees eliminar
+SELECT * FROM citas WHERE privado = FALSE;  -- Para obtener las citas públicas

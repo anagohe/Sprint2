@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca del Alma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Biblioteca del Alma</h1>
+        <nav>
+            <ul>
+                <li><a href="#books">Libros</a></li>
+                <li><a href="#quotes">Citas</a></li>
+                <li><a href="#add-book">Agregar Libro</a></li>
+                <li><a href="#add-quote">Agregar Cita</a></li>
+                <li><a href="#privacy">Privacidad</a></li>
+            </ul>
+        </nav>
+        <blockquote>
+            <p>"Un libro es un sueño que tienes en las manos." - Pablo Neruda</p>
+        </blockquote>
+    </header>
+
+    <main>
+        <section id="books">
+            <h2>Libros que He Leído</h2>
+            <div id="filter">
+                <label for="filter-author">Filtrar por Autor:</label>
+                <input type="text" id="filter-author" placeholder="Nombre del autor">
+
+                <label for="filter-genre">Filtrar por Género:</label>
+                <input type="text" id="filter-genre" placeholder="Género">
+
+                <button id="filter-button">Filtrar</button>
+            </div>
+            <div id="book-list"></div> <!-- Aquí se generarán dinámicamente los libros -->
+        </section>
+
+
+        <section id="quotes">
+            <h2>Citas que Inspiran</h2>
+            <div id="quote-list"></div>
+        </section>
+
+        <section id="add-book">
+            <h2>Agregar Libro</h2>
+            <form id="book-form">
+                <input type="text" name="titulo" placeholder="Título del libro" required>
+                <input type="text" name="genero" placeholder="Género" required>
+                <input type="text" name="autor" placeholder="Autor" required>
+                <input type="date" name="fecha_leida" required>
+                <input type="number" min="1" max="5" name="calificacion" placeholder="Calificación" required>
+                <textarea name="reseña" placeholder="Reseña" required></textarea>
+                <input type="hidden" name="bookId"> <!-- Para facilitar las ediciones -->
+                <button type="submit">Agregar Libro</button>
+                <label>
+                    <input type="checkbox" name="privado"> Privado
+                </label>
+            </form>
+        </section>
+
+
+        <section id="add-quote">
+            <h2>Agregar Cita</h2>
+            <form id="quote-form">
+                <input type="text" name="cita" placeholder="Cita" required>
+                <input type="text" name="libro_id" placeholder="ID del libro relacionado" required>
+                <!-- Asegúrate de que tiene el atributo name -->
+                <input type="text" name="autor" placeholder="Autor" required>
+
+                <label>
+                    <input type="checkbox" name="privado"> Privado
+                </label>
+
+                <button type="submit">Agregar Cita</button>
+            </form>
+        </section>
+
+
+        <section id="privacy">
+            <h2>Control de Visibilidad</h2>
+            <p>Elige qué libros o citas deseas compartir con el mundo.</p>
+        </section>
+    </main>
+
+    <!-- Modal para editar libros -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="close" onclick="closeEditModal()">×</button>
+            <h2>Editar Libro</h2>
+            <form id="edit-book-form">
+                <input type="hidden" name="bookId" />
+                <label>Título: <input type="text" name="titulo" required></label><br>
+                <label>Género: <input type="text" name="genero" required></label><br>
+                <label>Autor: <input type="text" name="autor" required></label><br>
+                <label>Fecha Leída: <input type="date" name="fecha_leida" required></label><br>
+                <label>Calificación: <input type="number" name="calificacion" min="1" max="5" required></label><br>
+                <label>Reseña: <textarea name="reseña" required></textarea></label><br>
+                <label>Privado: <input type="checkbox" name="privado"></label><br>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

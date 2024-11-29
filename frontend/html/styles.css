@@ -1,0 +1,257 @@
+/* Tipografía general */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #444;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Estilos para el menú */
+header {
+    background: linear-gradient(135deg, #3a3a3a, #555); /* Fondo degradado para el header */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #1976d2; /* Borde inferior del menú */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, transform 0.3s; /* Transición suave */
+}
+
+nav a:hover {
+    background-color: #1976d2; /* Fondo azul al pasar el ratón */
+    transform: scale(1.1); /* Aumentar el tamaño ligeramente */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra de efecto */
+}
+
+/* Mejorar los botones en las secciones */
+button {
+    background-color: #1976d2; /* Fondo azul claro */
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+button:hover {
+    background-color: #1565c0; /* Fondo azul oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más prominente */
+}
+
+/* Estilos para las secciones de las tarjetas de libros */
+.book-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.3s; /* Efecto de hover */
+}
+
+.book-card:hover {
+    transform: translateY(-5px); /* Movimiento hacia arriba al pasar el ratón */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Aumenta la sombra */
+}
+
+/* Estilos de las secciones con fondo */
+section {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    transition: background-color 0.5s, transform 0.3s, box-shadow 0.3s;
+}
+
+/* Indicador de color para las secciones */
+#books {
+    background-color: #f9f9f9;
+    border-left: 5px solid #1976d2;
+}
+
+#quotes {
+    background-color: #eef;
+    border-left: 5px solid #ff5722;
+}
+
+#add-book {
+    background-color: #e3f2fd;
+    border-left: 5px solid #1976d2;
+}
+
+#privacy {
+    background-color: #f9f9f9;
+    border-left: 5px solid #9c27b0;
+}
+
+/* Hacer que las secciones se agranden con una ligera animación */
+section:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejora la apariencia de los encabezados */
+h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.8rem;
+    color: #1976d2;
+    margin-bottom: 15px;
+    position: relative;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #1976d2;
+    transition: color 0.3s;
+}
+
+/* Barra animada debajo del título */
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: #ff4081;
+    transition: width 0.4s ease-in-out;
+}
+
+h2:hover::after {
+    width: 100%;
+}
+
+
+/* Color alternativo en cada sección */
+#books {
+    background-color: #f9f9f9; /* Gris claro */
+    border-left: 5px solid #ff4081; /* Indicador rosa */
+}
+
+#quotes {
+    background-color: #eef; /* Azul claro */
+    border-left: 5px solid #ff5722; /* Indicador naranja */
+}
+
+#add-book {
+    background-color: #e3f2fd; /* Azul muy claro */
+    border-left: 5px solid #1976d2; /* Indicador azul */
+}
+
+#privacy {
+    background-color: #f9f9f9; /* Gris claro */
+    border-left: 5px solid #9c27b0; /* Indicador morado */
+}
+
+/* Agregamos una transición de color uniforme */
+section {
+    transition: background-color 0.3s, border-left-color 0.3s, transform 0.3s;
+}
+
+/* Formularios */
+form {
+    display: grid;
+    gap: 15px;
+}
+
+input[type="text"], input[type="date"], input[type="number"], textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #1976d2;
+    outline: none;
+}
+
+/* Botones */
+button {
+    background-color: #1976d2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #1565c0;
+    transform: scale(1.05);
+}
+
+/* Tarjetas de libros */
+.book-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 50%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}

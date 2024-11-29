@@ -1,53 +1,21 @@
-CREATE TABLE Users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS libros (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    genero VARCHAR(100) NOT NULL,
+    autor VARCHAR(100) NOT NULL,
+    fecha_leida DATE NOT NULL,
+    calificacion INT CHECK (calificacion >= 1 AND calificacion <= 5),
+    reseña TEXT,
+    privado BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Books (
-    book_id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
-    genre VARCHAR(100),
-    read_date DATE,
-    user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE Reviews (
-    review_id INT AUTO_INCREMENT PRIMARY KEY,
-    book_id INT,
-    rating INT CHECK (rating >= 1 AND rating <= 5),
-    review_text TEXT,
-    user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES Books(book_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE Quotes (
-    quote_id INT AUTO_INCREMENT PRIMARY KEY,
-    book_id INT,
-    quote_text TEXT NOT NULL,
-    user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES Books(book_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE Book_Shares (
-    share_id INT AUTO_INCREMENT PRIMARY KEY,
-    book_id INT,
-    shared_with_user_id INT,
-    user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES Books(book_id) ON DELETE CASCADE,
-    FOREIGN KEY (shared_with_user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS citas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cita TEXT NOT NULL,
+    libro_id INT,
+    autor VARCHAR(100) NOT NULL,
+    privado BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (libro_id) REFERENCES libros(id) ON DELETE SET NULL
 );

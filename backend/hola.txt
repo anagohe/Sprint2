@@ -1,0 +1,5 @@
+dependecias a instalar
+
+
+npm init -y
+npm install express mysql body-parser
