@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-// Obtener todas las citas
+
 exports.getAllQuotes = (req, res) => {
     const sql = 'SELECT * FROM citas WHERE privado = FALSE;';
     db.query(sql, (err, results) => {
@@ -11,7 +11,7 @@ exports.getAllQuotes = (req, res) => {
     });
 };
 
-// Agregar una nueva cita
+
 exports.addQuote = (req, res) => {
     const { cita, libro_id, autor, privado } = req.body;
     const sql = 'INSERT INTO citas (cita, libro_id, autor, privado) VALUES (?, ?, ?, ?)';
@@ -24,7 +24,7 @@ exports.addQuote = (req, res) => {
     });
 };
 
-// Editar una cita
+
 exports.updateQuote = (req, res) => {
     const { id } = req.params;
     const { cita, libro_id, autor, privado } = req.body;
@@ -42,7 +42,7 @@ exports.updateQuote = (req, res) => {
     });
 };
 
-// Eliminar una cita
+
 exports.deleteQuote = (req, res) => {
     const { id } = req.params;
 
