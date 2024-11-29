@@ -4,11 +4,13 @@ async function fetchBooks() {
     try {
         const response = await fetch(`${apiUrl}/libros`);
         const books = await response.json();
+        allBooks = books;  // Asignar los libros a allBooks
         displayBooks(books);
     } catch (error) {
         console.error('Error al obtener libros:', error);
     }
 }
+
 
 async function fetchQuotes() {
     try {

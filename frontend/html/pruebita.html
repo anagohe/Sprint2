@@ -31,15 +31,15 @@
             <div id="filter">
                 <label for="filter-author">Filtrar por Autor:</label>
                 <input type="text" id="filter-author" placeholder="Nombre del autor">
-                
+
                 <label for="filter-genre">Filtrar por Género:</label>
                 <input type="text" id="filter-genre" placeholder="Género">
-                
+
                 <button id="filter-button">Filtrar</button>
             </div>
             <div id="book-list"></div> <!-- Aquí se generarán dinámicamente los libros -->
         </section>
-        
+
 
         <section id="quotes">
             <h2>Citas que Inspiran</h2>
@@ -90,7 +90,7 @@
     <!-- Modal para editar libros -->
     <div id="edit-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close" onclick="closeEditModal()">&times;</span>
+            <button class="close" onclick="closeEditModal()">×</button>
             <h2>Editar Libro</h2>
             <form id="edit-book-form">
                 <input type="hidden" name="bookId" />
